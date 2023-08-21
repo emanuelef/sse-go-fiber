@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <h1>Getting server updates</h1>
+    <div id="result"></div>
+
+    <script>
+      if (typeof EventSource !== "undefined") {
+        var source = new EventSource("http://localhost:8080/sse?query=7");
+
+        source.onerror = (err) => {
+          console.log("on error", err);
+        };
+
+        source.onmessage = (msg) => {
+          console.log("on message", msg);
+        };
+
+        source.onopen = (...args) => {
+          console.log("on open", args);
+        };
+
+        source.onmessage = (event) => {
+          document.getElementById("result").innerHTML = event.data + "<br>";
+        };
+      } else {
+        document.getElementById("result").innerHTML =
+          "Your browser does not support server-sent events";
+      }
+    </script>
+  </body>
+</html>
