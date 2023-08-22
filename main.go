@@ -3,16 +3,16 @@ package main
 import (
 	"bufio"
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"log"
 	"math/rand"
+	"slices"
 	"strconv"
 	"strings"
 	"sync"
 	"time"
-
-	"slices"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
@@ -92,7 +92,6 @@ func main() {
 		stateChan := make(chan float64)
 
 		val, err := strconv.ParseFloat(query, 64)
-
 		if err != nil {
 			val = 0
 		}
@@ -164,19 +163,25 @@ func main() {
 		return nil
 	})
 
+	ctxTimeout, cancel := context.WithTimeout(context.Background(), 1*time.Minute)
+	defer cancel()
+
 	ticker := time.NewTicker(10 * time.Second)
-	done := make(chan bool)
 
 	go func() {
 		for {
 			select {
-			case <-done:
+			case <-ctxTimeout.Done():
 				fmt.Println("Ticker stopped")
 				return
 			case <-ticker.C:
 				// fmt.Println("Tick at", t)
 				wg := &sync.WaitGroup{}
 
+				// send a broadcast event, so all clients connected 
+				// will receive it, by filtering based on some info
+				// stored in the session it is possible to address
+				// only specific clients
 				for _, s := range currentSessions.sessions {
 					wg.Add(1)
 					go func(cs *session) {
@@ -193,8 +198,4 @@ func main() {
 	if err != nil {
 		log.Panic(err)
 	}
-
-	time.Sleep(3600 * time.Millisecond)
-	ticker.Stop()
-	done <- true
 }
