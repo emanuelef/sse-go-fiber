@@ -8,6 +8,7 @@ import (
 	"log"
 	"math/rand"
 	"strconv"
+	"strings"
 	"sync"
 	"time"
 
@@ -46,6 +47,27 @@ func (sl *sessionsLock) removeSession(s *session) {
 }
 
 var currentSessions sessionsLock
+
+func formatSSEMessage(eventType string, data any) (string, error) {
+	var buf bytes.Buffer
+	enc := json.NewEncoder(&buf)
+
+	m := map[string]any{
+		"data": data,
+	}
+
+	err := enc.Encode(m)
+	if err != nil {
+		return "", nil
+	}
+	sb := strings.Builder{}
+
+	sb.WriteString(fmt.Sprintf("event: %s\n", eventType))
+	sb.WriteString(fmt.Sprintf("retry: %d\n", 15000))
+	sb.WriteString(fmt.Sprintf("data: %v\n\n", buf.String()))
+
+	return sb.String(), nil
+}
 
 func main() {
 	app := fiber.New()
@@ -88,10 +110,11 @@ func main() {
 			keepAliveTickler := time.NewTicker(15 * time.Second)
 			keepAliveMsg := ":keepalive\n"
 
-			// listen to signal to close and unregister (doesn't seem to work)
+			// listen to signal to close and unregister (doesn't seem to be called)
 			go func() {
 				<-notify
 				log.Printf("Stopped Request\n")
+				currentSessions.removeSession(&s)
 				keepAliveTickler.Stop()
 			}()
 
@@ -99,17 +122,22 @@ func main() {
 				select {
 
 				case ev := <-stateChan:
-					var buf bytes.Buffer
-					enc := json.NewEncoder(&buf)
 
-					m := make(map[string]any)
-					m["type"] = "states"
-					m["infos"] = ev
+					sseMessage, err := formatSSEMessage("current-value", ev)
+					if err != nil {
+						log.Printf("Error formatting sse message: %v\n", err)
+						continue
+					}
 
-					enc.Encode(m)
-					fmt.Fprintf(w, "data: %s\n\n", buf.String())
-					// fmt.Printf("data: %v\n", buf.String())
-					err := w.Flush()
+					// send sse formatted message
+					fmt.Fprintf(w, sseMessage)
+
+					if err != nil {
+						log.Printf("Error while writing Data: %v\n", err)
+						continue
+					}
+
+					err = w.Flush()
 					if err != nil {
 						log.Printf("Error while flushing Data: %v\n", err)
 						currentSessions.removeSession(&s)
