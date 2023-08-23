@@ -26,15 +26,13 @@
         };
 
         source.addEventListener("current-value", (event) => {
-          //console.log(event.data);
           const parsedData = JSON.parse(event.data);
           const currentValue = parsedData.data;
           console.log(currentValue);
           resultElement.innerHTML = currentValue + "<br>";
         });
       } else {
-        document.getElementById("result").innerHTML =
-          "Your browser does not support server-sent events";
+        resultElement.innerHTML = "Your browser does not support SSE";
       }
 
       document.getElementById("closeButton").onclick = function () {

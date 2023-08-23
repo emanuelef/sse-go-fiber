@@ -1,5 +1,14 @@
 # sse-go-fiber
 
+Run the server with
+
+```shell
+go run main.go
+```
+
+Open the example.html page in a browser
+
+
 https://github.com/gofiber/fiber/issues/429#issuecomment-1500921469
 
 https://developer.mozilla.org/en-US/docs/Web/API/EventSource

@@ -178,7 +178,7 @@ func main() {
 				// fmt.Println("Tick at", t)
 				wg := &sync.WaitGroup{}
 
-				// send a broadcast event, so all clients connected 
+				// send a broadcast event, so all clients connected
 				// will receive it, by filtering based on some info
 				// stored in the session it is possible to address
 				// only specific clients
