@@ -121,7 +121,6 @@ func main() {
 				select {
 
 				case ev := <-stateChan:
-
 					sseMessage, err := formatSSEMessage("current-value", ev)
 					if err != nil {
 						log.Printf("Error formatting sse message: %v\n", err)
@@ -129,7 +128,7 @@ func main() {
 					}
 
 					// send sse formatted message
-					fmt.Fprintf(w, sseMessage)
+					_, err = fmt.Fprintf(w, sseMessage)
 
 					if err != nil {
 						log.Printf("Error while writing Data: %v\n", err)
