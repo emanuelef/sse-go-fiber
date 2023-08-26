@@ -162,7 +162,7 @@ func main() {
 		return nil
 	})
 
-	ctxTimeout, cancel := context.WithTimeout(context.Background(), 1*time.Minute)
+	ctxTimeout, cancel := context.WithTimeout(context.Background(), 10*time.Minute)
 	defer cancel()
 
 	ticker := time.NewTicker(10 * time.Second)
