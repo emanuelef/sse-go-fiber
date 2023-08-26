@@ -18,3 +18,9 @@ https://shopify.engineering/server-sent-events-data-streaming
 https://github.com/whatwg/html/issues/8297#issuecomment-1293054529
 
 https://github.com/whatwg/html/issues/7571#issuecomment-1321145607
+
+https://ably.com/topic/server-sent-events
+
+https://germano.dev/sse-websockets/
+
+https://www.smashingmagazine.com/2018/02/sse-websockets-data-flow-http2
