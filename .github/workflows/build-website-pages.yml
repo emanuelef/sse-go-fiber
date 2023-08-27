@@ -39,7 +39,7 @@ jobs:
           find: "http://localhost"
           replace: "https://143.47.235.108"
           regex: false
-          include: "./frontend/**"
+          include: "frontend/**"
       - name: Setup Pages
         uses: actions/configure-pages@v3
       - name: Upload artifact
