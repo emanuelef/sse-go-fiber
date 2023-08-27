@@ -31,3 +31,8 @@ https://ably.com/topic/server-sent-events
 https://germano.dev/sse-websockets/
 
 https://www.smashingmagazine.com/2018/02/sse-websockets-data-flow-http2
+
+
+k6 SSE support not there yet
+https://github.com/grafana/k6/issues/746
+https://community.grafana.com/t/is-it-possible-to-test-service-sent-events/99498
