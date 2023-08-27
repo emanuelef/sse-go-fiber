@@ -33,12 +33,17 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Find and Replace
+        uses: jacobtomlinson/gha-find-replace@v3
+        with:
+          find: "http://localhost"
+          replace: "https://143.47.235.108"
+          include: "./frontend/**"
       - name: Setup Pages
         uses: actions/configure-pages@v3
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
         with:
-          # Upload entire repository
           path: "./frontend"
       - name: Deploy to GitHub Pages
         id: deployment

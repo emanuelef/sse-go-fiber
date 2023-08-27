@@ -8,9 +8,10 @@
     <script>
       let source;
       const resultElement = document.getElementById("result");
+      const HOST = "http://localhost";
 
       if (typeof EventSource !== "undefined") {
-        source = new EventSource("https://143.47.235.108:8080/sse?query=7");
+        source = new EventSource(`${HOST}:8080/sse?query=7`);
 
         source.onerror = (err) => {
           console.log("on error", err);
