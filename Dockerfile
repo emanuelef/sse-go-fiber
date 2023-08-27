@@ -9,5 +9,5 @@ RUN go build -o sse-go-fiber ./main.go
 FROM alpine:latest AS runner
 WORKDIR /app
 COPY --from=builder /app/sse-go-fiber .
-EXPOSE 8099
+EXPOSE 8080
 ENTRYPOINT ["./sse-go-fiber"]
