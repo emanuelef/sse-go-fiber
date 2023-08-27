@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <h1>Getting server updates</h1>
+    <button id="closeButton" type="button">Close SSE</button>
+    <div id="result"></div>
+
+    <script>
+      let source;
+      const resultElement = document.getElementById("result");
+
+      if (typeof EventSource !== "undefined") {
+        source = new EventSource("https://143.47.235.108:8080/sse?query=7");
+
+        source.onerror = (err) => {
+          console.log("on error", err);
+        };
+
+        // The onmessage handler is called if no event name is specified for a message.
+        source.onmessage = (msg) => {
+          console.log("on message", msg);
+        };
+
+        source.onopen = (...args) => {
+          console.log("on open", args);
+        };
+
+        source.addEventListener("current-value", (event) => {
+          const parsedData = JSON.parse(event.data);
+          const currentValue = parsedData.data;
+          console.log(currentValue);
+          resultElement.innerHTML = currentValue + "<br>";
+        });
+      } else {
+        resultElement.innerHTML = "Your browser does not support SSE";
+      }
+
+      document.getElementById("closeButton").onclick = function () {
+        if (source) {
+          console.log("STOP SSE");
+          // If the connection is already closed, the method does nothing.
+          source.close();
+        }
+      };
+    </script>
+  </body>
+</html>
