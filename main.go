@@ -79,6 +79,14 @@ func main() {
 		return c.Send(nil)
 	})
 
+	app.Get("/connections", func(c *fiber.Ctx) error {
+		m := map[string]any{
+			"open-connections": app.Server().GetOpenConnectionsCount(),
+			"sessions":         len(currentSessions.sessions),
+		}
+		return c.JSON(m)
+	})
+
 	app.Get("/sse", func(c *fiber.Ctx) error {
 		c.Set("Content-Type", "text/event-stream")
 		c.Set("Cache-Control", "no-cache")
@@ -162,8 +170,8 @@ func main() {
 		return nil
 	})
 
-	//ctxTimeout, cancel := context.WithTimeout(context.Background(), 10*time.Minute)
-	//defer cancel()
+	// ctxTimeout, cancel := context.WithTimeout(context.Background(), 10*time.Minute)
+	// defer cancel()
 
 	ticker := time.NewTicker(1 * time.Second)
 
