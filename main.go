@@ -3,6 +3,8 @@ package main
 import (
 	"bufio"
 	"bytes"
+	"runtime"
+
 	//"context"
 	"encoding/json"
 	"fmt"
@@ -69,6 +71,10 @@ func formatSSEMessage(eventType string, data any) (string, error) {
 	return sb.String(), nil
 }
 
+func bToMb(b uint64) uint64 {
+	return b / 1024 / 1024
+}
+
 func main() {
 	app := fiber.New()
 
@@ -85,6 +91,24 @@ func main() {
 			"sessions":         len(currentSessions.sessions),
 		}
 		return c.JSON(m)
+	})
+
+	app.Get("/infos", func(c *fiber.Ctx) error {
+		var m runtime.MemStats
+		runtime.ReadMemStats(&m)
+
+		res := map[string]any{
+			"Alloc":      bToMb(m.Alloc),
+			"TotalAlloc": bToMb(m.TotalAlloc),
+			"tSys":       bToMb(m.Sys),
+			"tNumGC":     m.NumGC,
+			"goroutines": runtime.NumGoroutine(),
+		}
+
+		// percent, _ := cpu.Percent(time.Second, true)
+		// fmt.Printf("  User: %.2f\n", percent[cpu.CPUser])
+
+		return c.JSON(res)
 	})
 
 	app.Get("/sse", func(c *fiber.Ctx) error {
