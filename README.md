@@ -6,8 +6,15 @@ Run the server with
 go run main.go
 ```
 
-Open the example.html page in a browser
+```shell
+open example.html
+```
 
+docker run -p 8080:8080 ghcr.io/emanuelef/sse-go-fiber:latest
+
+docker run --restart=always -d -p 8080:8080 ghcr.io/emanuelef/sse-go-fiber:latest
+
+Open the example.html page in a browser
 
 https://github.com/gofiber/fiber/issues/429#issuecomment-1500921469
 

@@ -3,7 +3,7 @@ package main
 import (
 	"bufio"
 	"bytes"
-	"context"
+	//"context"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -162,17 +162,19 @@ func main() {
 		return nil
 	})
 
-	ctxTimeout, cancel := context.WithTimeout(context.Background(), 10*time.Minute)
-	defer cancel()
+	//ctxTimeout, cancel := context.WithTimeout(context.Background(), 10*time.Minute)
+	//defer cancel()
 
 	ticker := time.NewTicker(10 * time.Second)
 
 	go func() {
 		for {
 			select {
-			case <-ctxTimeout.Done():
-				fmt.Println("Ticker stopped")
-				return
+			/*
+				case <-ctxTimeout.Done():
+					fmt.Println("Ticker stopped")
+					return
+			*/
 			case <-ticker.C:
 				// fmt.Println("Tick at", t)
 				wg := &sync.WaitGroup{}
