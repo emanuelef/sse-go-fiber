@@ -48,6 +48,18 @@ func (sl *sessionsLock) removeSession(s *session) {
 	sl.MU.Unlock()
 }
 
+func Filter[T any](filter func(n T) bool) func(T []T) []T {
+	return func(list []T) []T {
+		r := make([]T, 0, len(list))
+		for _, n := range list {
+			if filter(n) {
+				r = append(r, n)
+			}
+		}
+		return r
+	}
+}
+
 var currentSessions sessionsLock
 
 func formatSSEMessage(eventType string, data any) (string, error) {
@@ -227,7 +239,7 @@ func main() {
 		}
 	}()
 
-	err := app.Listen(":8080")
+	err := app.Listen("127.0.0.1:8080")
 	if err != nil {
 		log.Panic(err)
 	}
