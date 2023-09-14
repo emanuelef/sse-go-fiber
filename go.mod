@@ -3,7 +3,7 @@ module github.com/emanuelef/sse-go-fiber
 go 1.21.0
 
 require (
-	github.com/gofiber/fiber/v2 v2.49.1
+	github.com/gofiber/fiber/v2 v2.49.2
 	github.com/valyala/fasthttp v1.49.0
 )
 
